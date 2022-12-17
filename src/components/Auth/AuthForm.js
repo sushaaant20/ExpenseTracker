@@ -1,9 +1,11 @@
 import React, { useState, useRef, useContext } from "react";
 import { Card, Container, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../Store/AuthContext";
 
 const AuthForm = (props) => {
   const navigate = useNavigate();
+  const ctx = useContext(AuthContext);
 
   //login and signUp toggle
   const [isLogin, setIsLogin] = useState(false);
@@ -88,13 +90,11 @@ const AuthForm = (props) => {
           //if credential matches
           setIsSendingReq(false);
           alert("User authenticated successfully");
-          navigate("/intro", { replace: true });
+          //navigate("/welcome", { replace: true });
 
           const data = await res.json();
           console.log("auth token: ", data.idToken);
-          localStorage.setItem("expense_token", data.idToken);
-          // userCtx.updateToken(data.idToken);
-          // history.replace('/');
+          ctx.updateToken(data.idToken);
         } else {
           //if credentials are wrong
           const data = await res.json();

@@ -1,14 +1,28 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Intro from "./Pages/Intro";
+import React, { Fragment, useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import AuthContext from "./components/Store/AuthContext";
+
+import Welcome from "./Pages/Welcome";
 import AuthForm from "./components/Auth/AuthForm";
+import Profile from "./Pages/Profile";
 
 const App = () => {
+  const ctx = useContext(AuthContext);
   return (
     <>
       <Routes>
-        <Route path="/" element={<AuthForm />} />
-        <Route path="/intro" element={<Intro />} />
+        {ctx.isLoggedIn && (
+          <Fragment>
+            <Route
+              path="/"
+              element={<Navigate to="/welcome" replace={true} />}
+            />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/profile" element={<Profile />} />
+          </Fragment>
+        )}
+        {!ctx.isLoggedIn && <Route path="/" element={<AuthForm />} />}
+        <Route path="*" element={<p>Not found</p>} />
       </Routes>
     </>
   );
