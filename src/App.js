@@ -1,16 +1,15 @@
 import React from "react";
-import Signup from "./components/SignUp/Singup";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Intro from "./Pages/Intro";
+import AuthForm from "./components/Auth/AuthForm";
 
 const App = () => {
   return (
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route to="/" element={<Singup />} />
-    //   </Routes>
-    // </BrowserRouter>
     <>
-      <Signup />
+      <Routes>
+        <Route path="/" element={<AuthForm />} />
+        <Route path="/intro" element={<Intro />} />
+      </Routes>
     </>
   );
 };
