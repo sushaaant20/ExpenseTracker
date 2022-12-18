@@ -10,6 +10,7 @@ const AuthContextProvider = (props) => {
   const [fullName, setFullName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const token = localStorage.getItem("expense_token");
+  const email = localStorage.getItem("expense_email");
 
   //check if the user has logged in or not - making the login persistent after the refresh
   useEffect(() => {
@@ -41,9 +42,10 @@ const AuthContextProvider = (props) => {
   }, [token]);
 
   // update user token
-  const updateToken = (token) => {
+  const updateAuthInfo = (token, email) => {
     //update token in local storage and update.
     localStorage.setItem("expense_token", token);
+    localStorage.setItem("email_token", email);
     setIsLoggedIn(true);
   };
 
@@ -55,8 +57,9 @@ const AuthContextProvider = (props) => {
 
   const authCtx = {
     token: token,
+    email: email,
+    updateAuthInfo: updateAuthInfo,
     isLoggedIn: isLoggedIn,
-    updateToken: updateToken,
     fullName: fullName,
     profilePhoto: profilePhoto,
     updateProfile: updateProfile,

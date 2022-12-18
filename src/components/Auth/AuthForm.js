@@ -94,7 +94,7 @@ const AuthForm = (props) => {
 
           const data = await res.json();
           console.log("auth token: ", data.idToken);
-          ctx.updateToken(data.idToken);
+          ctx.updateAuthInfo(data.idToken, emailRef.current.value);
         } else {
           //if credentials are wrong
           const data = await res.json();

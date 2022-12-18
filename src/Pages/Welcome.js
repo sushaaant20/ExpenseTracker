@@ -1,11 +1,33 @@
 import React, { Fragment, useContext } from "react";
 import { Link } from "react-router-dom";
-import { Card, Container, Navbar, Nav } from "react-bootstrap";
+import { Card, Container, Navbar, Nav, Button } from "react-bootstrap";
 import AuthContext from "../components/Store/AuthContext";
+import axios from "axios";
+import { Axios } from "axios";
 
 const Welcome = () => {
   const ctx = useContext(AuthContext);
+  const verifyEmailUrl = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_VERY_PRIVATE_KEY}`;
 
+  //  EMAIL VERIFICATION
+  const verifyEmailHandler = async (e) => {
+    try {
+      const res = await axios.post(verifyEmailUrl, {
+        requestType: "VERIFY_EMAIL",
+        idToken: ctx.token,
+      });
+      if (res.status === 200) {
+        alert("Email Verified Successfully");
+        console.log(res);
+      } else {
+        alert("Email verification Failed");
+        console.log(res);
+      }
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+  };
   return (
     <Fragment>
       {/* <Card
@@ -34,6 +56,7 @@ const Welcome = () => {
       <Navbar bg="dark" variant="dark">
         <Container>
           <Navbar.Brand href="#">Expense Tracker</Navbar.Brand>
+          <Button onClick={verifyEmailHandler}>Verify Email</Button>
           {/* <Nav className="me-auto"> */}
           {!ctx.fullName && !ctx.profilePhoto && (
             <Navbar.Text>
