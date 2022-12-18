@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from "react";
 import { Card, Container, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../Store/AuthContext";
+import ForgotPassword from "./ForgotPassword";
 
 const AuthForm = (props) => {
   const navigate = useNavigate();
@@ -176,7 +177,7 @@ const AuthForm = (props) => {
             )}
             {isSendingReq && <p>Sending Request</p>}
           </Form>
-          {isLogin && <Link to="..">Forgot password</Link>}
+          {isLogin && <Link to="/ForgotPassword">Forgot password</Link>}
           <Button
             variant="danger"
             onClick={switchAuthModeHandler}

@@ -5,6 +5,7 @@ import AuthContext from "./components/Store/AuthContext";
 import Welcome from "./Pages/Welcome";
 import AuthForm from "./components/Auth/AuthForm";
 import Profile from "./Pages/Profile";
+import ForgotPassword from "./components/Auth/ForgotPassword";
 
 const App = () => {
   const ctx = useContext(AuthContext);
@@ -25,6 +26,9 @@ const App = () => {
 
         {!ctx.isLoggedIn && (
           <Route path="*" element={<Navigate to="/" replace={true} />} />
+        )}
+        {!ctx.isLoggedIn && (
+          <Route path="/ForgotPassword" element={<ForgotPassword />} />
         )}
 
         {ctx.isLoggedIn && <Route path="/" element={<AuthForm />} />}
