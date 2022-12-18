@@ -4,6 +4,7 @@ import { Card, Container, Navbar, Nav, Button } from "react-bootstrap";
 import AuthContext from "../components/Store/AuthContext";
 import axios from "axios";
 import Logout from "./Logout";
+import ExpenseForm from "../components/Auth/Expenses/ExpensesForm";
 
 const Welcome = () => {
   const ctx = useContext(AuthContext);
@@ -75,6 +76,7 @@ const Welcome = () => {
         </Container>
         <Logout />
       </Navbar>
+      <ExpenseForm />
     </Fragment>
   );
 };
