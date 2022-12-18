@@ -46,7 +46,11 @@ const AuthContextProvider = (props) => {
     //update token in local storage and update.
     localStorage.setItem("expense_token", token);
     localStorage.setItem("email_token", email);
-    setIsLoggedIn(true);
+    if (token === "" && email === "") {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
   };
 
   //update user Profile

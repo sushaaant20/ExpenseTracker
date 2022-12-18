@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, Container, Navbar, Nav, Button } from "react-bootstrap";
 import AuthContext from "../components/Store/AuthContext";
 import axios from "axios";
-import { Axios } from "axios";
+import Logout from "./Logout";
 
 const Welcome = () => {
   const ctx = useContext(AuthContext);
@@ -73,6 +73,7 @@ const Welcome = () => {
           )}
           {/* </Nav> */}
         </Container>
+        <Logout />
       </Navbar>
     </Fragment>
   );

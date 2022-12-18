@@ -22,6 +22,12 @@ const App = () => {
           </Fragment>
         )}
         {!ctx.isLoggedIn && <Route path="/" element={<AuthForm />} />}
+
+        {!ctx.isLoggedIn && (
+          <Route path="*" element={<Navigate to="/" replace={true} />} />
+        )}
+
+        {ctx.isLoggedIn && <Route path="/" element={<AuthForm />} />}
         <Route path="*" element={<p>Not found</p>} />
       </Routes>
     </>
