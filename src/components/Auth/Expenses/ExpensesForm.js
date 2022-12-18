@@ -1,26 +1,27 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState, useContext } from "react";
 import { Button, Container, Form, Card } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import ExpenseList from "./ExpenseList";
+import ExpContext from "../../Store/ExpContext";
+import axios from "axios";
 
 const ExpenseForm = () => {
-  const [expList, setExpList] = useState([]);
+  const expCtx = useContext(ExpContext);
 
   //get user input
   const amountRef = useRef();
   const descRef = useRef();
   const categoryRef = useRef();
 
-  const submitExpenseHandler = (e) => {
+  const submitExpenseHandler = async (e) => {
     e.preventDefault();
     const expObj = {
-      id: Math.random(),
       amount: amountRef.current.value,
       description: descRef.current.value,
       category: categoryRef.current.value,
     };
-    setExpList((expList) => [...expList, expObj]);
+    expCtx.addExpense(expObj);
   };
 
   return (
@@ -69,7 +70,7 @@ const ExpenseForm = () => {
           </Form>
         </Card>
       </Container>
-      <ExpenseList expenses={expList} />
+      <ExpenseList expenses={expCtx.expenseList} />
     </Fragment>
   );
 };

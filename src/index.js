@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import AuthContextProvider from "./components/Store/AuthContextProvider";
+import ExpContextProvider from "./components/Store/ExpContextProvider";
 
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,8 +14,10 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ExpContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ExpContextProvider>
   </AuthContextProvider>
 );
