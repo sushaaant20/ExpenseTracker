@@ -1,10 +1,7 @@
 import React, { Fragment, useRef, useState, useContext } from "react";
 import { Button, Container, Form, Card } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import ExpenseList from "./ExpenseList";
 import ExpContext from "../../Store/ExpContext";
-import axios from "axios";
 
 const ExpenseForm = () => {
   const expCtx = useContext(ExpContext);
@@ -13,6 +10,7 @@ const ExpenseForm = () => {
   const amountRef = useRef();
   const descRef = useRef();
   const categoryRef = useRef();
+  const [isEditing, setIsEditing] = useState();
 
   const submitExpenseHandler = async (e) => {
     e.preventDefault();
@@ -24,10 +22,33 @@ const ExpenseForm = () => {
     expCtx.addExpense(expObj);
   };
 
+  const editExpense = (expense) => {
+    amountRef.current.value = expense.amount;
+    descRef.current.value = expense.category;
+    setIsEditing(expense.id);
+  };
+
+  const editExpenseHandler = (e) => {
+    e.preventDefault();
+    const expObj = {
+      id: isEditing,
+      amount: amountRef.current.value,
+      description: descRef.current.value,
+      category: categoryRef.current.value,
+    };
+    expCtx.editExpense(expObj);
+    setIsEditing(false);
+  };
+
   return (
     <Fragment>
       <Container
-        style={{ display: "flex", marginLeft: "40%", marginTop: "2%" }}
+        style={{
+          display: "flex",
+          marginLeft: "15%",
+          marginTop: "2%",
+          padding: "30px",
+        }}
       >
         <Card style={{ padding: "20px" }}>
           <Form>
@@ -59,18 +80,43 @@ const ExpenseForm = () => {
                 <Dropdown.Item ref={categoryRef}>Groceries</Dropdown.Item>
               </DropdownButton> */}
             </Form.Group>
-            <Button
-              style={{ padding: "5px", marginTop: "3px" }}
-              type="submit"
-              size="sm"
-              onClick={submitExpenseHandler}
-            >
-              Add Expense
-            </Button>
+            {!isEditing && (
+              <Button
+                style={{ padding: "5px", marginTop: "3px" }}
+                type="submit"
+                size="sm"
+                onClick={submitExpenseHandler}
+              >
+                Add Expense
+              </Button>
+            )}
+            {isEditing && (
+              <Button
+                style={{ padding: "5px", marginTop: "3px" }}
+                type="submit"
+                size="sm"
+                onClick={editExpenseHandler}
+              >
+                Edit Expense
+              </Button>
+            )}
           </Form>
         </Card>
+        <Card
+          border="primary"
+          style={{
+            padding: "20px",
+            height: "400px",
+            width: "500px",
+            marginLeft: "20px",
+          }}
+        >
+          <ExpenseList
+            expenses={expCtx.expenseList}
+            editExpense={editExpense}
+          />
+        </Card>
       </Container>
-      <ExpenseList expenses={expCtx.expenseList} />
     </Fragment>
   );
 };
