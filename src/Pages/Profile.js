@@ -1,5 +1,7 @@
 import React, { useContext, useRef } from "react";
 import AuthContext from "../components/Store/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { authAction } from "../store/Auth";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -14,10 +16,13 @@ import {
 import axios from "axios";
 
 const Profile = (props) => {
+  const dispatch = useDispatch();
+  const fullName = useSelector((state) => state.auth.fullName);
+  const profilePhoto = useSelector((state) => state.auth.profilePhoto);
+  const token = useSelector((state) => state.auth.token);
+
   const fullNameRef = useRef("");
   const profileUrlRef = useRef("");
-
-  const ctx = useContext(AuthContext);
 
   //path to update user Profile in Firebase
   const updateProfileUrl = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${process.env.REACT_APP_VERY_PRIVATE_KEY}`;
@@ -30,14 +35,16 @@ const Profile = (props) => {
 
     axios
       .post(updateProfileUrl, {
-        idToken: ctx.token,
+        idToken: token,
         displayName: fullName,
         photoUrl: profileUrl,
         returnSecureToken: true,
       })
       .then((res) => {
         alert("profile updated successfully");
-        ctx.updateProfile(fullName, profileUrl);
+        dispatch(
+          authAction.updateProfile({ name: fullName, profileUrl: profileUrl })
+        );
       })
       .catch((error) => {
         alert("Error while Updating profile");
@@ -72,12 +79,14 @@ const Profile = (props) => {
       <Navbar bg="dark" variant="dark">
         <Container style={{ display: "flex", justifyContent: "space-around" }}>
           <Navbar.Brand>Winners Never Quit, Quitters Never Win!!</Navbar.Brand>
-          <Nav className="me-auto" style={{ marginLeft: "30rem" }}>
-            <Nav.Link href="#home">
-              Your Profile is 60%
-              <Link to="/profile"> Complete Now</Link>
-            </Nav.Link>
-          </Nav>
+          {!fullName && !profilePhoto && (
+            <Nav className="me-auto" style={{ marginLeft: "30rem" }}>
+              <Nav.Link href="#home">
+                Your Profile is 60%
+                <Link to="/profile"> Complete Now</Link>
+              </Nav.Link>
+            </Nav>
+          )}
         </Container>
       </Navbar>
 
@@ -96,14 +105,14 @@ const Profile = (props) => {
               <Form.Control
                 placeholder="Name"
                 ref={fullNameRef}
-                defaultValue={ctx.fullName}
+                defaultValue={fullName}
               />
             </Col>
             <Col>
               <Form.Control
                 placeholder="url"
                 ref={profileUrlRef}
-                defaultValue={ctx.profilePhoto}
+                defaultValue={profilePhoto}
               />
             </Col>
           </Row>

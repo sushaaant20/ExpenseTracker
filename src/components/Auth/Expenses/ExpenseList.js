@@ -1,14 +1,13 @@
 import ExpenseItem from "./ExpenseItem";
-import ExpContext from "../../Store/ExpContext";
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 const ExpenseList = (props) => {
-  const expCtx = useContext(ExpContext);
+  const total = useSelector((state) => state.expense.total);
   //console.log(expCtx.total);
 
   return (
     <>
-      <h2>Total {expCtx.total}</h2>
+      <h2>Total {total}</h2>
       {props.expenses.map((expense) => {
         return (
           <ExpenseItem

@@ -4,10 +4,13 @@ import { Card, Container, Navbar, Nav, Button } from "react-bootstrap";
 import AuthContext from "../components/Store/AuthContext";
 import axios from "axios";
 import Logout from "./Logout";
+import { useSelector } from "react-redux";
 import ExpenseForm from "../components/Auth/Expenses/ExpensesForm";
 
 const Welcome = () => {
-  const ctx = useContext(AuthContext);
+  const token = useSelector((state) => state.auth.token);
+  const fullName = useSelector((state) => state.auth.fullName);
+  const profilePhoto = useSelector((state) => state.auth.profilePhoto);
   const verifyEmailUrl = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.REACT_APP_VERY_PRIVATE_KEY}`;
 
   //  EMAIL VERIFICATION
@@ -15,7 +18,7 @@ const Welcome = () => {
     try {
       const res = await axios.post(verifyEmailUrl, {
         requestType: "VERIFY_EMAIL",
-        idToken: ctx.token,
+        idToken: token,
       });
       if (res.status === 200) {
         alert("Email Verified Successfully");
@@ -59,14 +62,14 @@ const Welcome = () => {
           <Navbar.Brand href="#">Expense Tracker</Navbar.Brand>
           <Button onClick={verifyEmailHandler}>Verify Email</Button>
           {/* <Nav className="me-auto"> */}
-          {!ctx.fullName && !ctx.profilePhoto && (
+          {!fullName && !profilePhoto && (
             <Navbar.Text>
               Your Profile is Incomplete
               <br />
               <Link to="/profile">Complete Now</Link>
             </Navbar.Text>
           )}
-          {ctx.fullName && ctx.profilePhoto && (
+          {fullName && profilePhoto && (
             <Navbar.Text>
               Your Profile is Complete <br />
               <Link to="/profile">EDIT</Link>

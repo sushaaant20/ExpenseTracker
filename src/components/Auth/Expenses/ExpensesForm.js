@@ -1,10 +1,23 @@
 import React, { Fragment, useRef, useState, useContext } from "react";
 import { Button, Container, Form, Card } from "react-bootstrap";
 import ExpenseList from "./ExpenseList";
-import ExpContext from "../../Store/ExpContext";
+import { useSelector, useDispatch } from "react-redux";
+import { expenseAction } from "../../../store/Expense";
+import axios from "axios";
 
 const ExpenseForm = () => {
-  const expCtx = useContext(ExpContext);
+  //firebase database URL path
+  const url =
+    "https://expense-tracker-909bf-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  //firebase database URL path for update
+  const updateUrl =
+    "https://expense-tracker-909bf-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  const dispatch = useDispatch();
+  const expenseList = useSelector((state) => state.expense.expenseList);
+
+  console.log(expenseList);
 
   //get user input
   const amountRef = useRef();
@@ -19,7 +32,20 @@ const ExpenseForm = () => {
       description: descRef.current.value,
       category: categoryRef.current.value,
     };
-    expCtx.addExpense(expObj);
+    //update expense details into firebase database
+    const res = await axios.post(`${url}/expense.json`, expObj);
+    console.log("res", res);
+
+    if (res.status === 200) {
+      alert("Expense stored in database successfully");
+      const expense = {
+        id: res.data.name,
+        ...expObj,
+      };
+      dispatch(expenseAction.addExpense(expense));
+    } else {
+      alert("Error while storing expense details ");
+    }
   };
 
   const editExpense = (expense) => {
@@ -28,7 +54,7 @@ const ExpenseForm = () => {
     setIsEditing(expense.id);
   };
 
-  const editExpenseHandler = (e) => {
+  const editExpenseHandler = async (e) => {
     e.preventDefault();
     const expObj = {
       id: isEditing,
@@ -36,7 +62,12 @@ const ExpenseForm = () => {
       description: descRef.current.value,
       category: categoryRef.current.value,
     };
-    expCtx.editExpense(expObj);
+    const res = await axios.put(
+      `${updateUrl}/expense/${expObj.id}.json`,
+      expObj
+    );
+    if (res.status === 200) console.log("expense edited successfully");
+    dispatch(expenseAction.addExpense(expObj));
     setIsEditing(false);
   };
 
@@ -111,10 +142,7 @@ const ExpenseForm = () => {
             marginLeft: "20px",
           }}
         >
-          <ExpenseList
-            expenses={expCtx.expenseList}
-            editExpense={editExpense}
-          />
+          <ExpenseList expenses={expenseList} editExpense={editExpense} />
         </Card>
       </Container>
     </Fragment>

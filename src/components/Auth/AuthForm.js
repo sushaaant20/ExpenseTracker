@@ -3,10 +3,13 @@ import { Card, Container, Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../Store/AuthContext";
 import ForgotPassword from "./ForgotPassword";
+import { useDispatch, useSelector } from "react-redux";
+import { authAction } from "../../store/Auth";
 
 const AuthForm = (props) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const ctx = useContext(AuthContext);
+  //const ctx = useContext(AuthContext);
 
   //login and signUp toggle
   const [isLogin, setIsLogin] = useState(false);
@@ -95,7 +98,13 @@ const AuthForm = (props) => {
 
           const data = await res.json();
           console.log("auth token: ", data.idToken);
-          ctx.updateAuthInfo(data.idToken, emailRef.current.value);
+          dispatch(
+            authAction.updateAuthInfo({
+              token: data.idToken,
+              email: emailRef.current.value,
+            })
+          );
+          //ctx.updateAuthInfo(data.idToken, emailRef.current.value);
         } else {
           //if credentials are wrong
           const data = await res.json();

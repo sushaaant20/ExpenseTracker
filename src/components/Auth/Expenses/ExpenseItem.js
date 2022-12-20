@@ -1,16 +1,28 @@
 import { useContext } from "react";
-import ExpContext from "../../Store/ExpContext";
+import { useDispatch } from "react-redux";
+import { expenseAction } from "../../../store/Expense";
+import axios from "axios";
 import { Button, Card, Container } from "react-bootstrap";
 
 const ExpenseItem = (props) => {
-  const expCtx = useContext(ExpContext);
-  const removeExpense = () => {
-    expCtx.removeExpense(props.expense, false);
+  const dispatch = useDispatch();
+
+  //firebase database URL path
+  const url =
+    "https://expense-tracker-909bf-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  const removeExpense = async () => {
+    //need to remove from screen as well as backend
+    const res = await axios.delete(`${url}/expense/${props.expense.id}.json`);
+    if (res.status === 200) console.log("expense deleted successfully");
+    dispatch(expenseAction.removeExpense(props.expense));
   };
 
   // edit expense
   const editExpense = () => {
-    expCtx.removeExpense(props.expense.true);
+    dispatch(expenseAction.removeExpense(props.expense));
+
+    //show expense inputs on to expense form so user can edit it
     props.editExpense(props.expense);
   };
 
