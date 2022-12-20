@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.dark-theme {
+  background-color: rgb(34, 31, 31);
+  color: black;
+}
+
+.light-theme {
+  background-color: white;
+  color: black;
+}

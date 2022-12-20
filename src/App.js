@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AuthContext from "./components/Store/AuthContext";
+import "./App.css";
 
 import Welcome from "./Pages/Welcome";
 import AuthForm from "./components/Auth/AuthForm";
@@ -13,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 const App = () => {
+  const theme = useSelector((state) => state.theme.theme);
   //firebase database URL path
   const url =
     "https://expense-tracker-909bf-default-rtdb.asia-southeast1.firebasedatabase.app";
@@ -92,9 +94,13 @@ const App = () => {
   }, []);
 
   const ctx = useContext(AuthContext);
+  //if theme is dark then assign dark theme css class to app div
+  let themeClass;
+  if (theme === "dark") document.body.className = "dark-theme";
+  else document.body.className = "light-theme";
 
   return (
-    <>
+    <div className="app">
       <Routes>
         {isLoggedin && (
           <Fragment>
@@ -118,7 +124,7 @@ const App = () => {
         {isLoggedin && <Route path="/" element={<AuthForm />} />}
         <Route path="*" element={<p>Not found</p>} />
       </Routes>
-    </>
+    </div>
   );
 };
 
